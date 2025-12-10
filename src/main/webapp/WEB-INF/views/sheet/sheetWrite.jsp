@@ -33,11 +33,6 @@
         </tr>
 
         <tr>
-            <th>날짜</th>
-            <td><input type="date" name="sheetDate" required></td>
-        </tr>
-
-        <tr>
             <th>악보 파일</th>
             <td><input type="file" name="sheetFileUpload" accept="image/*,application/pdf" required></td>
         </tr>

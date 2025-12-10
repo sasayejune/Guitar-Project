@@ -35,11 +35,6 @@
         </tr>
 
         <tr>
-            <th>날짜</th>
-            <td><input type="date" name="sheetDate" value="${sheet.sheetDate}" required></td>
-        </tr>
-
-        <tr>
             <th>현재 악보 파일</th>
             <td>
                 <c:if test="${not empty sheet.sheetFile}">

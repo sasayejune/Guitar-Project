@@ -6,7 +6,6 @@ public class SheetVO {
 
     private Integer sheetId;
     private String title;
-    private Date sheetDate;
 
     private String sheetFile;
     private String musicKey;
@@ -38,13 +37,6 @@ public class SheetVO {
         this.title = title;
     }
 
-    public Date getSheetDate() {
-        return sheetDate;
-    }
-
-    public void setSheetDate(Date sheetDate) {
-        this.sheetDate = sheetDate;
-    }
 
     public String getSheetFile() {
         return sheetFile;
@@ -107,7 +99,6 @@ public class SheetVO {
         return "SheetVO{" +
                 "sheetId=" + sheetId +
                 ", title='" + title + '\'' +
-                ", sheetDate=" + sheetDate +
                 ", sheetFile='" + sheetFile + '\'' +
                 ", musicKey='" + musicKey + '\'' +
                 ", codeId=" + codeId +

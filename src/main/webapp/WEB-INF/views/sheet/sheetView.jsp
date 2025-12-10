@@ -19,7 +19,6 @@
 
 <h2>🎼 ${sheet.title}</h2>
 
-<p><b>날짜:</b> ${sheet.sheetDate}</p>
 <p><b>키:</b> ${sheet.musicKey}</p>
 <p><b>난이도:</b> ${sheet.difficulty}</p>
 
