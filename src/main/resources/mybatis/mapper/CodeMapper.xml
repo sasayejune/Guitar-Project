@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hgu.guitar.dao.CodeMapper">
+
+    <!-- 전체 코드 목록 -->
+    <select id="getAllCodes" resultType="CodeVO">
+        SELECT *
+        FROM code_table
+        ORDER BY code_id DESC;
+    </select>
+
+    <!-- 코드 상세 조회 -->
+    <select id="getCodeById" parameterType="int" resultType="CodeVO">
+        SELECT *
+        FROM code_table
+        WHERE code_id = #{codeId};
+    </select>
+
+    <!-- 코드 등록 -->
+    <insert id="insertCode" parameterType="CodeVO">
+        INSERT INTO code_table
+        (thumb_x, thumb_y,
+         index_x, index_y,
+         middle_x, middle_y,
+         ring_x, ring_y,
+         pinky_x, pinky_y,
+         thumb_open,
+         mp3_path,
+         code_name)
+        VALUES
+            (#{thumbX}, #{thumbY},
+             #{indexX}, #{indexY},
+             #{middleX}, #{middleY},
+             #{ringX}, #{ringY},
+             #{pinkyX}, #{pinkyY},
+             #{thumbOpen},
+             #{mp3Path},
+             #{codeName});
+    </insert>
+
+    <!-- 코드 수정 -->
+    <update id="updateCode" parameterType="CodeVO">
+        UPDATE code_table
+        SET thumb_x = #{thumbX},
+            thumb_y = #{thumbY},
+            index_x = #{indexX},
+            index_y = #{indexY},
+            middle_x = #{middleX},
+            middle_y = #{middleY},
+            ring_x = #{ringX},
+            ring_y = #{ringY},
+            pinky_x = #{pinkyX},
+            pinky_y = #{pinkyY},
+            thumb_open = #{thumbOpen},
+            mp3_path = #{mp3Path},
+            code_name = #{codeName}
+        WHERE code_id = #{codeId};
+    </update>
+
+    <!-- 코드 삭제 -->
+    <delete id="deleteCode" parameterType="int">
+        DELETE FROM code_table
+        WHERE code_id = #{codeId};
+    </delete>
+
+</mapper>

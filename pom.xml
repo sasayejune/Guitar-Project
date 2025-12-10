@@ -76,6 +76,26 @@
             <version>2.11.0</version>
         </dependency>
 
+        <!-- javax.annotation.Resource 해결용 -->
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+            <version>1.3.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>5.3.30</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+            <version>5.3.30</version>
+        </dependency>
+
+
     </dependencies>
 
     <build>

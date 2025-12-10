@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hgu.guitar.dao.SheetMapper">
+
+    <!-- 전체 악보 목록 -->
+    <select id="getAllSheets" resultType="SheetVO">
+        SELECT *
+        FROM sheet_table
+        ORDER BY sheet_id DESC;
+    </select>
+
+    <!-- 악보 상세 조회 -->
+    <select id="getSheetById" parameterType="int" resultType="SheetVO">
+        SELECT *
+        FROM sheet_table
+        WHERE sheet_id = #{sheetId};
+    </select>
+
+    <!-- 악보 등록 -->
+    <insert id="insertSheet" parameterType="SheetVO">
+        INSERT INTO sheet_table
+        (title, sheet_date, sheet_file,
+         music_key, code_id, difficulty,
+         comment_text, stroke)
+        VALUES
+            (#{title}, #{sheetDate}, #{sheetFile},
+             #{musicKey}, #{codeId}, #{difficulty},
+             #{commentText}, #{stroke});
+    </insert>
+
+    <!-- 악보 수정 -->
+    <update id="updateSheet" parameterType="SheetVO">
+        UPDATE sheet_table
+        SET title = #{title},
+            sheet_date = #{sheetDate},
+            sheet_file = #{sheetFile},
+            music_key = #{musicKey},
+            code_id = #{codeId},
+            difficulty = #{difficulty},
+            comment_text = #{commentText},
+            stroke = #{stroke}
+        WHERE sheet_id = #{sheetId};
+    </update>
+
+    <!-- 악보 삭제 -->
+    <delete id="deleteSheet" parameterType="int">
+        DELETE FROM sheet_table
+        WHERE sheet_id = #{sheetId};
+    </delete>
+
+</mapper>
