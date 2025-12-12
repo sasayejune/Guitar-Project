@@ -8,7 +8,7 @@
     <title>Code View</title>
 
     <style>
-        /* 🚫 여백 완전 제거 */
+        /* 🚫 어떤 여백도 허용하지 않음 */
         html, body {
             margin: 0;
             padding: 0;
@@ -18,10 +18,12 @@
             background: none;
         }
 
-        /* 코드뷰 전체 = 기타 이미지 */
+        /* CodeView 전체 = 기타 이미지 영역 */
         #codeView {
             position: relative;
-            width: 100%;
+            width: 100%;          /* 기타 이미지 기준 폭 */
+            height: auto;
+            margin: 0 auto;
         }
 
         #guitarImage {
@@ -29,7 +31,7 @@
             display: block;
         }
 
-        /* 캔버스 */
+        /* 좌표 캔버스 */
         #fingerCanvas {
             position: absolute;
             left: 0;
@@ -37,7 +39,7 @@
             pointer-events: none;
         }
 
-        /* 코드 이름 */
+        /* 코드 이름 (이미지 위) */
         .code-title {
             position: absolute;
             top: 12px;
@@ -50,43 +52,21 @@
             border-radius: 20px;
         }
 
-        /* 우측 하단 패널 */
+        /* 정보 패널 (이미지 위) */
         .info-box {
             position: absolute;
-            right: 14px;
-            bottom: 20px;
-            background: rgba(255,255,255,0.9);
-            padding: 12px 14px;
-            border-radius: 12px;
+            right: 12px;
+            bottom: 24px;
+            background: rgba(255,255,255,0.85);
+            padding: 10px 14px;
+            border-radius: 10px;
             font-size: 13px;
-            text-align: center;
+            line-height: 1.5;
         }
 
         .info-box audio {
             width: 180px;
-            margin-bottom: 10px;
-        }
-
-        .btn {
-            display: block;
-            margin: 6px 0;
-            padding: 8px 14px;
-            border-radius: 10px;
-            font-weight: bold;
-            text-decoration: none;
-            color: white;
-        }
-
-        .edit-btn {
-            background: #2d7df6;
-        }
-
-        .delete-btn {
-            background: #d9534f;
-        }
-
-        .back-btn {
-            background: #555;
+            margin-top: 6px;
         }
     </style>
 </head>
@@ -102,34 +82,17 @@
     <!-- 좌표 캔버스 -->
     <canvas id="fingerCanvas"></canvas>
 
-    <!-- 코드명 -->
+    <!-- 코드 이름 -->
     <div class="code-title">
         🎸 ${code.codeName}
     </div>
 
-    <!-- 우측 하단 정보 -->
+    <!-- 정보 (이미지 위) -->
     <div class="info-box">
-
         <audio controls>
             <source src="${pageContext.request.contextPath}/${code.mp3Path}"
                     type="audio/mpeg">
         </audio>
-
-        <a class="btn edit-btn"
-           href="${pageContext.request.contextPath}/code/codeEdit/${code.codeId}">
-            ✏️ Edit
-        </a>
-
-        <a class="btn delete-btn"
-           href="${pageContext.request.contextPath}/code/delete/${code.codeId}"
-           onclick="return confirm('정말 삭제하시겠습니까?');">
-            🗑 Delete
-        </a>
-
-        <a class="btn back-btn"
-           href="${pageContext.request.contextPath}/list">
-            ← List
-        </a>
     </div>
 
 </div>
@@ -144,10 +107,10 @@
         canvas.height = img.clientHeight;
 
         const points = [
-            {x:${code.thumbX},  y:${code.thumbY}},
-            {x:${code.indexX},  y:${code.indexY}},
+            {x:${code.thumbX}, y:${code.thumbY}},
+            {x:${code.indexX}, y:${code.indexY}},
             {x:${code.middleX}, y:${code.middleY}},
-            {x:${code.ringX},   y:${code.ringY}},
+            {x:${code.ringX}, y:${code.ringY}},
             {x:${code.pinkyX}, y:${code.pinkyY}}
         ];
 
@@ -155,12 +118,9 @@
             if (p.x > 0 && p.y > 0) draw(p.x, p.y);
         });
 
-        function draw(xRatio, yRatio) {
-            const realX = xRatio * canvas.width;
-            const realY = yRatio * canvas.height;
-
+        function draw(x, y) {
             ctx.beginPath();
-            ctx.arc(realX, realY, 16, 0, Math.PI * 2); // 🔴 크게
+            ctx.arc(x, y, 10, 0, Math.PI * 2);
             ctx.fillStyle = "red";
             ctx.fill();
         }
