@@ -88,6 +88,7 @@
     <!-- ======================================== -->
     <!-- 10. 인터셉터 URL 정책                    -->
     <!-- ======================================== -->
+
     <mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
@@ -105,5 +106,6 @@
             <ref bean="authInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>
+
 
 </beans>
