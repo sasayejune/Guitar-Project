@@ -1,6 +1,7 @@
 package com.hgu.guitar.vo;
 
 import java.util.Date;
+import java.util.List;
 
 public class SheetVO {
 
@@ -9,8 +10,8 @@ public class SheetVO {
     private String sheetFile;
     private String musicKey;
 
-    // ⭐ 추가해야 할 필드
-    private Integer codeId;
+    // ⭐⭐⭐ 다중 코드 연결
+    private List<Integer> codeIds;
 
     private String difficulty;
     private String commentText;
@@ -51,13 +52,12 @@ public class SheetVO {
         this.musicKey = musicKey;
     }
 
-    // ⭐⭐⭐ 핵심
-    public Integer getCodeId() {
-        return codeId;
+    public List<Integer> getCodeIds() {
+        return codeIds;
     }
 
-    public void setCodeId(Integer codeId) {
-        this.codeId = codeId;
+    public void setCodeIds(List<Integer> codeIds) {
+        this.codeIds = codeIds;
     }
 
     public String getDifficulty() {

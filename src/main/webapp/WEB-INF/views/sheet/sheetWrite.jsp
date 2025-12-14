@@ -10,9 +10,13 @@
     <style>
         body { font-family: Arial; margin: 20px; }
         table { width: 600px; border-collapse: collapse; }
-        th, td { padding: 10px; border: 1px solid #ccc; }
+        th, td { padding: 10px; border: 1px solid #ccc; vertical-align: top; }
         input, select, textarea { width: 100%; padding: 5px; }
         textarea { height: 80px; }
+        .code-box label {
+            display: block;
+            margin-bottom: 4px;
+        }
     </style>
 </head>
 
@@ -53,12 +57,13 @@
 
         <tr>
             <th>코드 연결</th>
-            <td>
-                <select name="codeIds" multiple size="6">
-                    <c:forEach var="c" items="${codeList}">
-                        <option value="${c.codeId}">${c.codeName}</option>
-                    </c:forEach>
-                </select>
+            <td class="code-box">
+                <c:forEach var="c" items="${codeList}">
+                    <label>
+                        <input type="checkbox" name="codeIds" value="${c.codeId}">
+                            ${c.codeName}
+                    </label>
+                </c:forEach>
             </td>
         </tr>
 
@@ -80,8 +85,10 @@
 
         <tr>
             <th>스트로크</th>
-            <td><input type="text" name="stroke"
-                       placeholder="예: D D U U D U"></td>
+            <td>
+                <input type="text" name="stroke"
+                       placeholder="예: D D U U D U">
+            </td>
         </tr>
     </table>
 

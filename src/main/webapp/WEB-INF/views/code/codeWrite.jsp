@@ -31,7 +31,7 @@
             position: absolute;
             top: 0;
             left: 0;
-            pointer-events: none;
+            pointer-events: none; /* ✅ 그대로 둬도 됨(클릭은 img에서 받음) */
         }
 
         .guide {
@@ -115,21 +115,21 @@
             </div>
         </div>
 
-        <!-- hidden 좌표 필드 -->
-        <input type="hidden" name="thumbX" id="thumbX">
-        <input type="hidden" name="thumbY" id="thumbY">
+        <!-- hidden 좌표 필드 (✅ 기본값 0으로: 서버 바인딩/재그리기 안정) -->
+        <input type="hidden" name="thumbX"  id="thumbX"  value="0">
+        <input type="hidden" name="thumbY"  id="thumbY"  value="0">
 
-        <input type="hidden" name="indexX" id="indexX">
-        <input type="hidden" name="indexY" id="indexY">
+        <input type="hidden" name="indexX"  id="indexX"  value="0">
+        <input type="hidden" name="indexY"  id="indexY"  value="0">
 
-        <input type="hidden" name="middleX" id="middleX">
-        <input type="hidden" name="middleY" id="middleY">
+        <input type="hidden" name="middleX" id="middleX" value="0">
+        <input type="hidden" name="middleY" id="middleY" value="0">
 
-        <input type="hidden" name="ringX" id="ringX">
-        <input type="hidden" name="ringY" id="ringY">
+        <input type="hidden" name="ringX"   id="ringX"   value="0">
+        <input type="hidden" name="ringY"   id="ringY"   value="0">
 
-        <input type="hidden" name="pinkyX" id="pinkyX">
-        <input type="hidden" name="pinkyY" id="pinkyY">
+        <input type="hidden" name="pinkyX"  id="pinkyX"  value="0">
+        <input type="hidden" name="pinkyY"  id="pinkyY"  value="0">
 
         <input type="hidden" name="thumbOpen" value="0">
 
@@ -149,10 +149,33 @@
     function resizeCanvas() {
         canvas.width = img.clientWidth;
         canvas.height = img.clientHeight;
+        redrawAll(); // ✅ 리사이즈되면 캔버스가 초기화되므로 다시 그리기
     }
 
-    window.onload = resizeCanvas;
-    window.onresize = resizeCanvas;
+    // ✅ hidden 값 기준으로 “전체 점 다시 그리기”
+    function redrawAll() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        fingers.forEach(f => {
+            const x = parseFloat(document.getElementById(f + "X").value);
+            const y = parseFloat(document.getElementById(f + "Y").value);
+
+            // ✅ 0이면 “없음” → 안 그림
+            if (!isNaN(x) && !isNaN(y) && x > 0 && y > 0) {
+                drawCircle(x, y);
+            }
+        });
+    }
+
+    // ✅ 이미지 로드 타이밍 안정화 (onload보다 안전)
+    img.addEventListener("load", resizeCanvas);
+    window.addEventListener("resize", resizeCanvas);
+
+    // 캐시 등으로 img load가 안 잡히는 경우 대비
+    window.addEventListener("load", () => {
+        resizeCanvas();
+        updateGuide();
+    });
 
     img.addEventListener("click", (e) => {
         if (current >= fingers.length) return;
@@ -164,20 +187,21 @@
         document.getElementById(fingers[current] + "X").value = xRatio;
         document.getElementById(fingers[current] + "Y").value = yRatio;
 
-        drawCircle(xRatio, yRatio);
-
         current++;
         updateGuide();
+        redrawAll(); // ✅ drawCircle 직접 호출 대신, redraw로 통일(유지 안정)
     });
 
     function skipFinger() {
         if (current >= fingers.length) return;
 
-        document.getElementById(fingers[current] + "X").value = "";
-        document.getElementById(fingers[current] + "Y").value = "";
+        // ✅ "" 대신 0 (edit처럼 서버 바인딩/그리기 안정)
+        document.getElementById(fingers[current] + "X").value = "0";
+        document.getElementById(fingers[current] + "Y").value = "0";
 
         current++;
         updateGuide();
+        redrawAll();
     }
 
     function updateGuide() {

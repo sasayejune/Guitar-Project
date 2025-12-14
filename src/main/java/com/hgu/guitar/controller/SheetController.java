@@ -43,18 +43,14 @@ public class SheetController {
                         HttpServletRequest request) {
 
         vo.setSheetFile(FileUtil.saveFile(file, request, "sheet"));
-
-        // 👉 대표 코드 1개만 저장 (첫 번째)
-        if (codeIds != null && !codeIds.isEmpty()) {
-            vo.setCodeId(codeIds.get(0));
-        }
+        vo.setCodeIds(codeIds); // ✅ 여러 코드 그대로 전달
 
         sheetService.insertSheet(vo);
         return "redirect:/list";
     }
 
     // ======================
-    // 상세 보기 ⭐⭐⭐ (404 원인 해결)
+    // 상세 보기
     // ======================
     @GetMapping("/sheetView/{sheetId}")
     public String view(@PathVariable Integer sheetId, Model model) {
@@ -64,15 +60,16 @@ public class SheetController {
 
         List<CodeVO> linkedCodes = new ArrayList<>();
 
-        if (sheet.getCodeId() != null) {
-            CodeVO code = codeService.getCodeById(sheet.getCodeId());
-            if (code != null) {
-                linkedCodes.add(code);
+        if (sheet.getCodeIds() != null) {
+            for (Integer codeId : sheet.getCodeIds()) {
+                CodeVO code = codeService.getCodeById(codeId);
+                if (code != null) {
+                    linkedCodes.add(code);
+                }
             }
         }
 
         model.addAttribute("linkedCodes", linkedCodes);
-
         return "sheet/sheetView";
     }
 
@@ -85,17 +82,14 @@ public class SheetController {
         SheetVO sheet = sheetService.getSheetById(sheetId);
         model.addAttribute("sheet", sheet);
 
-        List<CodeVO> codeList = codeService.getAllCodes();
-        model.addAttribute("codeList", codeList);
+        model.addAttribute("codeList", codeService.getAllCodes());
 
-        // ⭐ 선택된 codeId (단일)
-        Integer selectedCodeId = sheet.getCodeId();
-        model.addAttribute("selectedCodeId", selectedCodeId);
+        // ✅ 다중 선택용
+        model.addAttribute("selectedCodeIds",
+                sheet.getCodeIds() != null ? sheet.getCodeIds() : Collections.emptyList());
 
         return "sheet/sheetEdit";
     }
-
-
 
     // ======================
     // 수정 처리
@@ -114,12 +108,7 @@ public class SheetController {
             vo.setSheetFile(old.getSheetFile());
         }
 
-        // 대표 코드 하나만 저장
-        if (codeIds != null && !codeIds.isEmpty()) {
-            vo.setCodeId(codeIds.get(0));
-        } else {
-            vo.setCodeId(null);
-        }
+        vo.setCodeIds(codeIds); // ✅ 여러 코드 그대로
 
         sheetService.updateSheet(vo);
         return "redirect:/list";
