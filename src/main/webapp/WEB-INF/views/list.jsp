@@ -10,9 +10,7 @@
     <style>
         body { font-family: Arial; margin: 20px; }
 
-        .tab-menu {
-            margin-bottom: 20px;
-        }
+        .tab-menu { margin-bottom: 20px; }
 
         .tab-btn {
             padding: 10px 20px;
@@ -22,10 +20,7 @@
             margin-right: 5px;
         }
 
-        .tab-btn.active {
-            background: #333;
-            color: white;
-        }
+        .tab-btn.active { background: #333; color: white; }
 
         .list-table {
             width: 100%;
@@ -40,6 +35,7 @@
         }
 
         .hidden { display: none; }
+        .hint { color: gray; margin-top: 10px; }
     </style>
 
     <script>
@@ -59,9 +55,10 @@
             }
         }
     </script>
-
 </head>
+
 <body>
+<jsp:include page="/WEB-INF/views/header.jsp"/>
 
 <h2>🎸 Guitar Guide List</h2>
 
@@ -98,8 +95,20 @@
         </c:forEach>
     </table>
 
-    <br>
-    <a href="${pageContext.request.contextPath}/code/codeWrite">코드 등록하기</a>
+    <!-- ✅ 코드 등록: ADMIN만 -->
+    <c:if test="${not empty loginUser and role eq 'ADMIN'}">
+        <br>
+        <a href="${pageContext.request.contextPath}/code/codeWrite">코드 등록하기</a>
+    </c:if>
+
+    <!-- ✅ 안내 문구 -->
+    <c:if test="${empty loginUser}">
+        <p class="hint">※ 코드 등록은 관리자 로그인 후 이용 가능합니다.</p>
+    </c:if>
+
+    <c:if test="${not empty loginUser and role ne 'ADMIN'}">
+        <p class="hint">※ 코드 등록은 관리자만 가능합니다.</p>
+    </c:if>
 
 </div>
 
@@ -133,8 +142,16 @@
         </c:forEach>
     </table>
 
-    <br>
-    <a href="${pageContext.request.contextPath}/sheet/sheetWrite">악보 등록하기</a>
+    <!-- ✅ 악보 등록: 로그인한 회원(USER/ADMIN)만 -->
+    <c:if test="${not empty loginUser}">
+        <br>
+        <a href="${pageContext.request.contextPath}/sheet/sheetWrite">악보 등록하기</a>
+    </c:if>
+
+    <!-- ✅ 비회원 안내 문구 -->
+    <c:if test="${empty loginUser}">
+        <p class="hint">※ 악보 등록은 로그인한 회원만 가능합니다.</p>
+    </c:if>
 
 </div>
 
