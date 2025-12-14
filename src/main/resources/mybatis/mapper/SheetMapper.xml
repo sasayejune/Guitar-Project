@@ -1,52 +1,81 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.hgu.guitar.dao.SheetMapper">
 
     <!-- 전체 악보 목록 -->
-    <select id="getAllSheets" resultType="SheetVO">
-        SELECT *
+    <select id="getAllSheets" resultType="com.hgu.guitar.vo.SheetVO">
+        SELECT
+            sheet_id,
+            title,
+            sheet_file,
+            music_key,
+            difficulty,
+            comment_text,
+            stroke,
+            created_at
         FROM sheet_table
-        ORDER BY sheet_id DESC;
+        ORDER BY sheet_id DESC
     </select>
 
     <!-- 악보 상세 조회 -->
-    <select id="getSheetById" parameterType="int" resultType="SheetVO">
-        SELECT *
+    <select id="getSheetById" parameterType="int"
+            resultType="com.hgu.guitar.vo.SheetVO">
+        SELECT
+            sheet_id,
+            title,
+            sheet_file,
+            music_key,
+            difficulty,
+            comment_text,
+            stroke,
+            created_at
         FROM sheet_table
-        WHERE sheet_id = #{sheetId};
+        WHERE sheet_id = #{sheetId}
     </select>
 
-    <!-- 악보 등록 -->
-    <insert id="insertSheet" parameterType="SheetVO">
+    <!-- 악보 등록 (🔥 code_id 제거됨) -->
+    <insert id="insertSheet" parameterType="com.hgu.guitar.vo.SheetVO"
+            useGeneratedKeys="true" keyProperty="sheetId">
         INSERT INTO sheet_table
-        (title, sheet_file,
-         music_key, code_id, difficulty,
-         comment_text, stroke)
+        (
+            title,
+            sheet_file,
+            music_key,
+            difficulty,
+            comment_text,
+            stroke
+        )
         VALUES
-            (#{title}, #{sheetFile},
-             #{musicKey}, #{codeId}, #{difficulty},
-             #{commentText}, #{stroke});
+            (
+                #{title},
+                #{sheetFile},
+                #{musicKey},
+                #{difficulty},
+                #{commentText},
+                #{stroke}
+            )
     </insert>
 
     <!-- 악보 수정 -->
-    <update id="updateSheet" parameterType="SheetVO">
+    <update id="updateSheet" parameterType="com.hgu.guitar.vo.SheetVO">
         UPDATE sheet_table
-        SET title = #{title},
+        SET
+            title = #{title},
             sheet_file = #{sheetFile},
             music_key = #{musicKey},
-            code_id = #{codeId},
             difficulty = #{difficulty},
             comment_text = #{commentText},
             stroke = #{stroke}
-        WHERE sheet_id = #{sheetId};
+        WHERE sheet_id = #{sheetId}
     </update>
 
     <!-- 악보 삭제 -->
     <delete id="deleteSheet" parameterType="int">
         DELETE FROM sheet_table
-        WHERE sheet_id = #{sheetId};
+        WHERE sheet_id = #{sheetId}
     </delete>
 
 </mapper>

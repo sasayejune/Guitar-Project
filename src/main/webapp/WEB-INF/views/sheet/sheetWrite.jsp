@@ -11,10 +11,7 @@
         body { font-family: Arial; margin: 20px; }
         table { width: 600px; border-collapse: collapse; }
         th, td { padding: 10px; border: 1px solid #ccc; }
-        input[type="text"], input[type="date"], select, textarea {
-            width: 100%;
-            padding: 5px;
-        }
+        input, select, textarea { width: 100%; padding: 5px; }
         textarea { height: 80px; }
     </style>
 </head>
@@ -34,7 +31,8 @@
 
         <tr>
             <th>악보 파일</th>
-            <td><input type="file" name="sheetFileUpload" accept="image/*,application/pdf" required></td>
+            <td><input type="file" name="sheetFileUpload"
+                       accept="image/*,application/pdf" required></td>
         </tr>
 
         <tr>
@@ -56,8 +54,7 @@
         <tr>
             <th>코드 연결</th>
             <td>
-                <select name="codeId" required>
-                    <option value="">연결할 코드 선택</option>
+                <select name="codeIds" multiple size="6">
                     <c:forEach var="c" items="${codeList}">
                         <option value="${c.codeId}">${c.codeName}</option>
                     </c:forEach>
@@ -83,14 +80,14 @@
 
         <tr>
             <th>스트로크</th>
-            <td><input type="text" name="stroke" placeholder="예: D D U U D U"></td>
+            <td><input type="text" name="stroke"
+                       placeholder="예: D D U U D U"></td>
         </tr>
     </table>
 
     <br>
     <button type="submit">등록하기</button>
-    &nbsp;&nbsp;
-    <a href="${pageContext.request.contextPath}/list">← 목록으로</a>
+    <a href="${pageContext.request.contextPath}/list">← 목록</a>
 
 </form>
 
