@@ -8,97 +8,163 @@
     <title>Code View</title>
 
     <style>
-        body { font-family: Arial; margin: 20px; text-align: center; }
+        /* 🚫 여백 완전 제거 */
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: none;
+        }
 
-        .container {
+        /* 코드뷰 전체 = 기타 이미지 */
+        #codeView {
             position: relative;
-            display: inline-block;
+            width: 100%;
         }
 
         #guitarImage {
-            width: 900px;       /* 이미지 크기 조정 가능 */
+            width: 100%;
+            display: block;
         }
 
+        /* 캔버스 */
         #fingerCanvas {
             position: absolute;
             left: 0;
             top: 0;
-            pointer-events: none;   /* 마우스 이벤트 막기 */
+            pointer-events: none;
         }
 
+        /* 코드 이름 */
+        .code-title {
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 22px;
+            font-weight: bold;
+            background: rgba(255,255,255,0.75);
+            padding: 6px 14px;
+            border-radius: 20px;
+        }
+
+        /* 우측 하단 패널 */
         .info-box {
-            margin-top: 20px;
+            position: absolute;
+            right: 14px;
+            bottom: 20px;
+            background: rgba(255,255,255,0.9);
+            padding: 12px 14px;
+            border-radius: 12px;
+            font-size: 13px;
+            text-align: center;
+        }
+
+        .info-box audio {
+            width: 180px;
+            margin-bottom: 10px;
+        }
+
+        .btn {
+            display: block;
+            margin: 6px 0;
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-weight: bold;
+            text-decoration: none;
+            color: white;
+        }
+
+        .edit-btn {
+            background: #2d7df6;
+        }
+
+        .delete-btn {
+            background: #d9534f;
+        }
+
+        .back-btn {
+            background: #555;
         }
     </style>
-
 </head>
+
 <body>
 
-<h2>🎸 코드 보기: ${code.codeName}</h2>
+<div id="codeView">
 
-<div class="container">
-    <!-- 배경 기타 이미지 -->
-    <img id="guitarImage" src="${pageContext.request.contextPath}/resources/img/guitar.png">
+    <!-- 기타 이미지 -->
+    <img id="guitarImage"
+         src="${pageContext.request.contextPath}/resources/img/guitar.png">
 
-    <!-- 좌표(원) 표시용 캔버스 -->
+    <!-- 좌표 캔버스 -->
     <canvas id="fingerCanvas"></canvas>
-</div>
 
-<div class="info-box">
-    <h3>좌표 정보</h3>
-    <p>Thumb: (${code.thumbX}, ${code.thumbY})</p>
-    <p>Index: (${code.indexX}, ${code.indexY})</p>
-    <p>Middle: (${code.middleX}, ${code.middleY})</p>
-    <p>Ring: (${code.ringX}, ${code.ringY})</p>
-    <p>Pinky: (${code.pinkyX}, ${code.pinkyY})</p>
+    <!-- 코드명 -->
+    <div class="code-title">
+        🎸 ${code.codeName}
+    </div>
 
-    <h3>MP3 재생</h3>
-    <audio controls>
-        <source src="${pageContext.request.contextPath}/${code.mp3Path}" type="audio/mpeg">
-        브라우저가 오디오 태그를 지원하지 않습니다.
-    </audio>
+    <!-- 우측 하단 정보 -->
+    <div class="info-box">
 
-    <br><br>
-    <a href="${pageContext.request.contextPath}/list">← 목록으로 돌아가기</a>
+        <audio controls>
+            <source src="${pageContext.request.contextPath}/${code.mp3Path}"
+                    type="audio/mpeg">
+        </audio>
+
+        <a class="btn edit-btn"
+           href="${pageContext.request.contextPath}/code/codeEdit/${code.codeId}">
+            ✏️ Edit
+        </a>
+
+        <a class="btn delete-btn"
+           href="${pageContext.request.contextPath}/code/delete/${code.codeId}"
+           onclick="return confirm('정말 삭제하시겠습니까?');">
+            🗑 Delete
+        </a>
+
+        <a class="btn back-btn"
+           href="${pageContext.request.contextPath}/list">
+            ← List
+        </a>
+    </div>
+
 </div>
 
 <script>
-    window.onload = function () {
+    window.onload = () => {
         const img = document.getElementById("guitarImage");
         const canvas = document.getElementById("fingerCanvas");
         const ctx = canvas.getContext("2d");
 
-        // 이미지 크기에 맞게 canvas 크기 조정
-        canvas.width = img.width;
-        canvas.height = img.height;
+        canvas.width = img.clientWidth;
+        canvas.height = img.clientHeight;
 
-        // JSP에서 좌표 JS로 전달
         const points = [
-            {x: ${code.thumbX}, y: ${code.thumbY}, color: "red"},
-            {x: ${code.indexX}, y: ${code.indexY}, color: "red"},
-            {x: ${code.middleX}, y: ${code.middleY}, color: "red"},
-            {x: ${code.ringX}, y: ${code.ringY}, color: "red"},
-            {x: ${code.pinkyX}, y: ${code.pinkyY}, color: "red"}
+            {x:${code.thumbX},  y:${code.thumbY}},
+            {x:${code.indexX},  y:${code.indexY}},
+            {x:${code.middleX}, y:${code.middleY}},
+            {x:${code.ringX},   y:${code.ringY}},
+            {x:${code.pinkyX}, y:${code.pinkyY}}
         ];
 
-        drawPoints();
+        points.forEach(p => {
+            if (p.x > 0 && p.y > 0) draw(p.x, p.y);
+        });
 
-        function drawPoints() {
-            points.forEach(p => {
-                if (p.x !== 0 && p.y !== 0) {
-                    drawCircle(p.x, p.y, p.color);
-                }
-            });
-        }
+        function draw(xRatio, yRatio) {
+            const realX = xRatio * canvas.width;
+            const realY = yRatio * canvas.height;
 
-        function drawCircle(x, y, color) {
             ctx.beginPath();
-            ctx.arc(x, y, 10, 0, Math.PI * 2);  // 반지름 10px
-            ctx.fillStyle = color;
+            ctx.arc(realX, realY, 16, 0, Math.PI * 2); // 🔴 크게
+            ctx.fillStyle = "red";
             ctx.fill();
-            ctx.closePath();
         }
-    }
+    };
 </script>
 
 </body>

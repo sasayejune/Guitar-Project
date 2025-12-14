@@ -21,11 +21,11 @@
     <!-- 악보 등록 -->
     <insert id="insertSheet" parameterType="SheetVO">
         INSERT INTO sheet_table
-        (title, sheet_date, sheet_file,
+        (title, sheet_file,
          music_key, code_id, difficulty,
          comment_text, stroke)
         VALUES
-            (#{title}, #{sheetDate}, #{sheetFile},
+            (#{title}, #{sheetFile},
              #{musicKey}, #{codeId}, #{difficulty},
              #{commentText}, #{stroke});
     </insert>
@@ -34,7 +34,6 @@
     <update id="updateSheet" parameterType="SheetVO">
         UPDATE sheet_table
         SET title = #{title},
-            sheet_date = #{sheetDate},
             sheet_file = #{sheetFile},
             music_key = #{musicKey},
             code_id = #{codeId},

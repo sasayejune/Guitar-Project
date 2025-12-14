@@ -8,103 +8,163 @@
     <title>코드 수정</title>
 
     <style>
-        body { font-family: Arial; margin: 20px; }
-        table { border-collapse: collapse; width: 500px; margin-bottom: 20px; }
-        th, td { padding: 8px; border: 1px solid #ccc; }
-        input[type="text"], input[type="number"] {
+        html, body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        #editView {
+            position: relative;
             width: 100%;
-            padding: 5px;
+        }
+
+        #guitarImage {
+            width: 100%;
+            display: block;
+            position: relative;
+            z-index: 1;
+        }
+
+        #canvas {
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 10;
+            pointer-events: auto;
+        }
+
+        .panel {
+            position: absolute;
+            right: 14px;
+            top: 20px;
+            z-index: 20;
+            background: rgba(255,255,255,0.92);
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 13px;
+        }
+
+        .panel button {
+            display: block;
+            width: 100%;
+            margin-top: 6px;
         }
     </style>
-
 </head>
-<body>
 
-<h2>🎸 코드 수정: ${code.codeName}</h2>
+<body>
 
 <form action="${pageContext.request.contextPath}/code/codeEdit"
       method="post"
       enctype="multipart/form-data">
 
-    <!-- 수정에 필요: codeId hidden -->
     <input type="hidden" name="codeId" value="${code.codeId}">
+    <input type="hidden" name="codeName" value="${code.codeName}">
 
-    <table>
-        <tr>
-            <th>코드 이름</th>
-            <td><input type="text" name="codeName" value="${code.codeName}" required></td>
-        </tr>
+    <!-- 좌표 hidden -->
+    <input type="hidden" name="thumbX" id="thumbX">
+    <input type="hidden" name="thumbY" id="thumbY">
+    <input type="hidden" name="indexX" id="indexX">
+    <input type="hidden" name="indexY" id="indexY">
+    <input type="hidden" name="middleX" id="middleX">
+    <input type="hidden" name="middleY" id="middleY">
+    <input type="hidden" name="ringX" id="ringX">
+    <input type="hidden" name="ringY" id="ringY">
+    <input type="hidden" name="pinkyX" id="pinkyX">
+    <input type="hidden" name="pinkyY" id="pinkyY">
 
-        <tr>
-            <th>엄지 X / Y</th>
-            <td>
-                <input type="number" name="thumbX" value="${code.thumbX}"> /
-                <input type="number" name="thumbY" value="${code.thumbY}">
-            </td>
-        </tr>
+    <div id="editView">
 
-        <tr>
-            <th>검지 X / Y</th>
-            <td>
-                <input type="number" name="indexX" value="${code.indexX}"> /
-                <input type="number" name="indexY" value="${code.indexY}">
-            </td>
-        </tr>
+        <img id="guitarImage"
+             src="${pageContext.request.contextPath}/resources/img/guitar.png">
 
-        <tr>
-            <th>중지 X / Y</th>
-            <td>
-                <input type="number" name="middleX" value="${code.middleX}"> /
-                <input type="number" name="middleY" value="${code.middleY}">
-            </td>
-        </tr>
+        <canvas id="canvas"></canvas>
 
-        <tr>
-            <th>약지 X / Y</th>
-            <td>
-                <input type="number" name="ringX" value="${code.ringX}"> /
-                <input type="number" name="ringY" value="${code.ringY}">
-            </td>
-        </tr>
+        <div class="panel">
+            <b>🎯 클릭 순서</b><br>
+            엄지 → 검지 → 중지 → 약지 → 소지
 
-        <tr>
-            <th>소지 X / Y</th>
-            <td>
-                <input type="number" name="pinkyX" value="${code.pinkyX}"> /
-                <input type="number" name="pinkyY" value="${code.pinkyY}">
-            </td>
-        </tr>
+            <button type="button" onclick="skip()">현재 손가락 없음</button>
 
-        <tr>
-            <th>엄지 열림/닫힘</th>
-            <td>
-                <select name="thumbOpen">
-                    <option value="0" <c:if test="${code.thumbOpen == 0}">selected</c:if>>닫힘</option>
-                    <option value="1" <c:if test="${code.thumbOpen == 1}">selected</c:if>>열림</option>
-                </select>
-            </td>
-        </tr>
+            <hr>
 
-        <tr>
-            <th>현재 MP3</th>
-            <td>
-                <audio controls>
-                    <source src="${pageContext.request.contextPath}/${code.mp3Path}">
-                </audio>
-            </td>
-        </tr>
+            <audio controls style="width:180px;">
+                <source src="${pageContext.request.contextPath}/${code.mp3Path}">
+            </audio>
 
-        <tr>
-            <th>새 MP3 파일 업로드</th>
-            <td><input type="file" name="mp3File" accept="audio/*"></td>
-        </tr>
-    </table>
+            <input type="file" name="mp3File" accept="audio/*">
 
-    <button type="submit">수정 완료</button>
-    &nbsp;&nbsp;
-    <a href="${pageContext.request.contextPath}/list">← 돌아가기</a>
+            <hr>
 
+            <button type="submit">수정 완료</button>
+            <a href="${pageContext.request.contextPath}/list">← 목록</a>
+        </div>
+
+    </div>
 </form>
+
+<script>
+    const img = document.getElementById("guitarImage");
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+
+    const fingers = ["thumb","index","middle","ring","pinky"];
+    let step = 0;
+
+    const existing = {
+        thumb:  {x:${code.thumbX},  y:${code.thumbY}},
+        index:  {x:${code.indexX},  y:${code.indexY}},
+        middle: {x:${code.middleX}, y:${code.middleY}},
+        ring:   {x:${code.ringX},   y:${code.ringY}},
+        pinky:  {x:${code.pinkyX},  y:${code.pinkyY}}
+    };
+
+    window.onload = () => {
+        canvas.width = img.clientWidth;
+        canvas.height = img.clientHeight;
+
+        fingers.forEach(f => {
+            const p = existing[f];
+            if (p.x > 0 && p.y > 0) {
+                draw(p.x, p.y);
+                document.getElementById(f+"X").value = p.x;
+                document.getElementById(f+"Y").value = p.y;
+                step++;
+            }
+        });
+    };
+
+    canvas.addEventListener("click", e => {
+        if (step >= fingers.length) return;
+
+        const rect = canvas.getBoundingClientRect();
+        const xRatio = (e.clientX - rect.left) / canvas.width;
+        const yRatio = (e.clientY - rect.top) / canvas.height;
+
+        const f = fingers[step];
+        document.getElementById(f+"X").value = xRatio;
+        document.getElementById(f+"Y").value = yRatio;
+
+        draw(xRatio, yRatio);
+        step++;
+    });
+
+    function skip() {
+        if (step < fingers.length) step++;
+    }
+
+    function draw(xRatio, yRatio) {
+        ctx.beginPath();
+        ctx.arc(
+            xRatio * canvas.width,
+            yRatio * canvas.height,
+            18, 0, Math.PI * 2
+        );
+        ctx.fillStyle = "red";
+        ctx.fill();
+    }
+</script>
 
 </body>
 </html>

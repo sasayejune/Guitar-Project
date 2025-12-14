@@ -6,30 +6,34 @@ public class CodeVO {
 
     private Integer codeId;
 
-    private Integer thumbX;
-    private Integer thumbY;
+    // === 손가락 좌표 (비율값 0.0 ~ 1.0) ===
+    private Double thumbX;
+    private Double thumbY;
 
-    private Integer indexX;
-    private Integer indexY;
+    private Double indexX;
+    private Double indexY;
 
-    private Integer middleX;
-    private Integer middleY;
+    private Double middleX;
+    private Double middleY;
 
-    private Integer ringX;
-    private Integer ringY;
+    private Double ringX;
+    private Double ringY;
 
-    private Integer pinkyX;
-    private Integer pinkyY;
+    private Double pinkyX;
+    private Double pinkyY;
 
-    private Integer thumbOpen;   // 0/1
+    // 엄지 개방 여부 (0 / 1)
+    private Integer thumbOpen;
 
-    private String mp3Path;
+    // 코드 정보
     private String codeName;
+    private String mp3Path;
 
     private Date createdAt;
 
-    public CodeVO() {
-    }
+    public CodeVO() {}
+
+    // ===== getter / setter =====
 
     public Integer getCodeId() {
         return codeId;
@@ -39,83 +43,83 @@ public class CodeVO {
         this.codeId = codeId;
     }
 
-    public Integer getThumbX() {
+    public Double getThumbX() {
         return thumbX;
     }
 
-    public void setThumbX(Integer thumbX) {
+    public void setThumbX(Double thumbX) {
         this.thumbX = thumbX;
     }
 
-    public Integer getThumbY() {
+    public Double getThumbY() {
         return thumbY;
     }
 
-    public void setThumbY(Integer thumbY) {
+    public void setThumbY(Double thumbY) {
         this.thumbY = thumbY;
     }
 
-    public Integer getIndexX() {
+    public Double getIndexX() {
         return indexX;
     }
 
-    public void setIndexX(Integer indexX) {
+    public void setIndexX(Double indexX) {
         this.indexX = indexX;
     }
 
-    public Integer getIndexY() {
+    public Double getIndexY() {
         return indexY;
     }
 
-    public void setIndexY(Integer indexY) {
+    public void setIndexY(Double indexY) {
         this.indexY = indexY;
     }
 
-    public Integer getMiddleX() {
+    public Double getMiddleX() {
         return middleX;
     }
 
-    public void setMiddleX(Integer middleX) {
+    public void setMiddleX(Double middleX) {
         this.middleX = middleX;
     }
 
-    public Integer getMiddleY() {
+    public Double getMiddleY() {
         return middleY;
     }
 
-    public void setMiddleY(Integer middleY) {
+    public void setMiddleY(Double middleY) {
         this.middleY = middleY;
     }
 
-    public Integer getRingX() {
+    public Double getRingX() {
         return ringX;
     }
 
-    public void setRingX(Integer ringX) {
+    public void setRingX(Double ringX) {
         this.ringX = ringX;
     }
 
-    public Integer getRingY() {
+    public Double getRingY() {
         return ringY;
     }
 
-    public void setRingY(Integer ringY) {
+    public void setRingY(Double ringY) {
         this.ringY = ringY;
     }
 
-    public Integer getPinkyX() {
+    public Double getPinkyX() {
         return pinkyX;
     }
 
-    public void setPinkyX(Integer pinkyX) {
+    public void setPinkyX(Double pinkyX) {
         this.pinkyX = pinkyX;
     }
 
-    public Integer getPinkyY() {
+    public Double getPinkyY() {
         return pinkyY;
     }
 
-    public void setPinkyY(Integer pinkyY) {
+    public void setPinkyY(Double pinkyY) {
         this.pinkyY = pinkyY;
     }
 
@@ -155,20 +159,14 @@ public class CodeVO {
     public String toString() {
         return "CodeVO{" +
                 "codeId=" + codeId +
-                ", thumbX=" + thumbX +
-                ", thumbY=" + thumbY +
-                ", indexX=" + indexX +
-                ", indexY=" + indexY +
-                ", middleX=" + middleX +
-                ", middleY=" + middleY +
-                ", ringX=" + ringX +
-                ", ringY=" + ringY +
-                ", pinkyX=" + pinkyX +
-                ", pinkyY=" + pinkyY +
+                ", codeName='" + codeName + '\'' +
+                ", thumb=(" + thumbX + ", " + thumbY + ")" +
+                ", index=(" + indexX + ", " + indexY + ")" +
+                ", middle=(" + middleX + ", " + middleY + ")" +
+                ", ring=(" + ringX + ", " + ringY + ")" +
+                ", pinky=(" + pinkyX + ", " + pinkyY + ")" +
                 ", thumbOpen=" + thumbOpen +
                 ", mp3Path='" + mp3Path + '\'' +
-                ", codeName='" + codeName + '\'' +
-                ", createdAt=" + createdAt +
                 '}';
     }
 }
