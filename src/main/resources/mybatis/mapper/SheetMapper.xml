@@ -15,7 +15,8 @@
             difficulty,
             comment_text,
             stroke,
-            created_at
+            created_at,
+            writer_userid
         FROM sheet_table
         ORDER BY sheet_id DESC
     </select>
@@ -31,7 +32,8 @@
             difficulty,
             comment_text,
             stroke,
-            created_at
+            created_at,
+            writer_userid
         FROM sheet_table
         WHERE sheet_id = #{value}
     </select>
@@ -46,7 +48,8 @@
             music_key,
             difficulty,
             comment_text,
-            stroke
+            stroke,
+            writer_userid
         )
         VALUES
             (
@@ -55,7 +58,8 @@
                 #{musicKey},
                 #{difficulty},
                 #{commentText},
-                #{stroke}
+                #{stroke},
+                #{writerUserid}
             )
     </insert>
 
@@ -68,8 +72,10 @@
             music_key = #{musicKey},
             difficulty = #{difficulty},
             comment_text = #{commentText},
-            stroke = #{stroke}
-        WHERE sheet_id = #{sheetId}
+            stroke = #{stroke},
+            writer_userid = #{writerUserid}
+        WHERE sheet_id = #{sheetId},
+
     </update>
 
     <!-- 악보 삭제 -->
