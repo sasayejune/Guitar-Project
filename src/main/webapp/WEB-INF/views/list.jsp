@@ -352,7 +352,8 @@
                                         <div style="display:flex; align-items:center; gap:10px;">
                                             <span class="badge badge-blue">첨부됨</span>
                                             <audio controls preload="none" style="height:30px; max-width:240px;">
-                                                <source src="${c.mp3Path}" type="audio/mp4"/>
+                                                <source src="${pageContext.request.contextPath}${c.mp3Path}" type="audio/mpeg"/>
+
                                             </audio>
                                         </div>
                                     </c:otherwise>
