@@ -1,6 +1,7 @@
 package com.hgu.guitar.controller;
 
 import com.hgu.guitar.service.CodeService;
+import com.hgu.guitar.service.SheetService;
 import com.hgu.guitar.util.FileUtil;
 import com.hgu.guitar.vo.CodeVO;
 import org.springframework.stereotype.Controller;
@@ -18,6 +19,50 @@ public class CodeController {
     @Resource
     private CodeService codeService;
 
+    @Resource
+    private SheetService sheetService;
+
+    // ================================
+    // 코드 목록 (검색/정렬/페이징)
+    // URL: /code/list?q=&sort=&page=
+    // ================================
+    @GetMapping("/list")
+    public String list(
+            @RequestParam(required = false) String q,
+            @RequestParam(defaultValue = "latest") String sort,   // latest | nameAsc | nameDesc
+            @RequestParam(defaultValue = "1") int page,
+            Model model
+    ) {
+        int size = 10;                 // 한 페이지에 10개
+        if (page < 1) page = 1;
+
+        // 전체 개수 (검색 조건 반영)
+        int total = codeService.countCodes(q);
+
+        // 총 페이지 수 계산
+        int totalPages = (int) Math.ceil((double) total / size);
+        if (totalPages == 0) totalPages = 1;
+        if (page > totalPages) page = totalPages;
+
+        // SQL LIMIT/OFFSET 계산
+        int offset = (page - 1) * size;
+
+        // ✅ 코드 목록
+        model.addAttribute("codeList", codeService.getCodes(q, sort, size, offset));
+
+        // ✅ (중요) 악보 탭도 같이 보여야 하니까 sheetList도 항상 담아줌
+        model.addAttribute("sheetList", sheetService.getAllSheets());
+
+        // JSP에서 검색창/정렬/페이지네이션 UI 유지하려고 같이 전달
+        model.addAttribute("q", q);
+        model.addAttribute("sort", sort);
+        model.addAttribute("page", page);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("total", total);
+
+        return "list";
+    }
+
     // ================================
     // ① 코드 등록 화면
     // ================================
@@ -34,17 +79,13 @@ public class CodeController {
                         @RequestParam("mp3File") MultipartFile mp3File,
                         HttpServletRequest request) {
 
-        // MP3 파일 저장
         String mp3Path = FileUtil.saveFile(mp3File, request, "code");
+        if (mp3Path != null) vo.setMp3Path(mp3Path);
 
-        if (mp3Path != null) {
-            vo.setMp3Path(mp3Path);
-        }
-
-        // DB 저장
         codeService.insertCode(vo);
 
-        return "redirect:/list";
+        // 등록 후 목록으로
+        return "redirect:/code/list";
     }
 
     // ================================
@@ -73,21 +114,19 @@ public class CodeController {
                        @RequestParam("mp3File") MultipartFile mp3File,
                        HttpServletRequest request) {
 
-        // 기존 코드 DB 값 가져오기
         CodeVO old = codeService.getCodeById(vo.getCodeId());
 
-        // 새 파일이 있으면 교체
         if (mp3File != null && !mp3File.isEmpty()) {
             String newPath = FileUtil.saveFile(mp3File, request, "code");
             vo.setMp3Path(newPath);
         } else {
-            // 새 파일이 없으면 기존 파일 유지
             vo.setMp3Path(old.getMp3Path());
         }
 
         codeService.updateCode(vo);
 
-        return "redirect:/list";
+        // 수정 후 목록으로
+        return "redirect:/code/list";
     }
 
     // ================================
@@ -96,6 +135,8 @@ public class CodeController {
     @GetMapping("/delete/{codeId}")
     public String delete(@PathVariable Integer codeId) {
         codeService.deleteCode(codeId);
-        return "redirect:/list";
+
+        // 삭제 후 목록으로
+        return "redirect:/code/list";
     }
 }

@@ -57,7 +57,7 @@
     </div>
 
     <p class="hint">
-        ※ 이 페이지는 AuthInterceptor에서 /admin/** 를 ADMIN만 허용하도록 설정되어 있습니다.
+        ※ 이 페이지는 ADMIN만 허용하도록 설정되어 있습니다.
     </p>
 </div>
 

@@ -14,4 +14,8 @@ public interface CodeService {
     void updateCode(CodeVO code);
 
     void deleteCode(Integer codeId);
+
+    int countCodes(String q);
+
+    List<CodeVO> getCodes(String q, String sort, int size, int offset);
 }
