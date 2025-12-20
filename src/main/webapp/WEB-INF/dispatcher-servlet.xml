@@ -22,9 +22,13 @@
     <context:component-scan base-package="com.hgu.guitar"/>
 
     <!-- ======================================== -->
-    <!-- 2. 정적 리소스 매핑                       -->
-    <!-- ======================================== -->
+    <!-- 정적 리소스 (프로젝트 안 resources 폴더) -->
     <mvc:resources mapping="/resources/**" location="/resources/"/>
+
+    <!-- 업로드 파일 (war 밖 외부 폴더) -->
+    <mvc:resources mapping="/upload/**" location="file:${user.home}/guitar_upload/"/>
+
+
 
     <!-- ======================================== -->
     <!-- 3. Spring MVC 기본 설정                   -->
@@ -102,8 +106,12 @@
 
             <!-- 정적 리소스 -->
             <mvc:exclude-mapping path="/resources/**"/>
+            <!-- 업로드 파일 (mp3/pdf/img) -->
+            <mvc:exclude-mapping path="/upload/**"/>
 
             <ref bean="authInterceptor"/>
+
+
         </mvc:interceptor>
     </mvc:interceptors>
 

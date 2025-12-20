@@ -25,6 +25,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                 || path.equals("/login")
                 || path.startsWith("/resources/")
                 || path.startsWith("/resources")
+                || path.startsWith("/upload/")
         ) {
             return true;
         }
@@ -61,7 +62,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         boolean loginRequired =
                 path.startsWith("/sheet/sheetWrite")
                         || path.startsWith("/sheet/sheetEdit")
-                        || path.startsWith("/sheet/sheetDelete");
+                        || path.startsWith("/sheet/delete");
 
         if (loginRequired) {
             if (loginUser == null) {

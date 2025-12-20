@@ -17,6 +17,7 @@ public class SheetVO {
     private String commentText;
     private String stroke;
     private Date createdAt;
+    private String writerUserid;
 
     // ===== getter / setter =====
 
@@ -91,4 +92,14 @@ public class SheetVO {
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
+
+
+    public String getWriterUserid() {
+        return writerUserid;
+    }
+
+    public void setWriterUserid(String writerUserid) {
+        this.writerUserid = writerUserid;
+    }
+
 }

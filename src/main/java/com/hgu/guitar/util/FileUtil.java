@@ -21,42 +21,41 @@ public class FileUtil {
                                   HttpServletRequest request,
                                   String folder) {
 
-        if (file == null || file.isEmpty()) {
-            return null;  // 업로드된 파일 없음
+        if (file == null || file.isEmpty()) return null;
+
+        // ✅ 외부 업로드 루트 (시스템 프로퍼티로 받기)
+        // 예: -Dupload.root=/Users/gimgiu/guitar_upload
+        String uploadRoot = System.getProperty("upload.root");
+
+        // 프로퍼티 없으면(로컬 급한 경우) user.home 아래로 기본 설정
+        if (uploadRoot == null || uploadRoot.trim().isEmpty()) {
+            uploadRoot = System.getProperty("user.home") + "/guitar_upload";
         }
 
-        // 파일 저장 루트 : /resources/upload/{folder}/
-        String uploadDir = "/resources/upload/" + folder + "/";
 
-        // 실제 물리적 저장 경로 얻기
-        String realPath = request.getServletContext().getRealPath(uploadDir);
+        String realPath = uploadRoot + "/" + folder + "/";
 
-        // 저장 폴더가 없으면 생성
         File dir = new File(realPath);
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
+        if (!dir.exists()) dir.mkdirs();
 
-        // 원본 파일명과 확장자 추출
         String originalName = file.getOriginalFilename();
         String ext = "";
         if (originalName != null && originalName.contains(".")) {
             ext = originalName.substring(originalName.lastIndexOf("."));
         }
 
-        // 새 파일명 생성
         String uuid = UUID.randomUUID().toString().replace("-", "");
         String newFileName = uuid + ext;
 
-        // 실제 파일 저장
         File saveFile = new File(realPath, newFileName);
         try {
-            file.transferTo(saveFile);   // 파일 저장 수행
+            file.transferTo(saveFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        // DB에 저장할 경로 (상대 경로)
-        return uploadDir + newFileName;   // 예: /resources/upload/code/abcd1234.mp3
+        // ✅ DB에는 "접근 URL" 저장 (/upload/ 아래)
+        return "/upload/" + folder + "/" + newFileName;
     }
+
 }
