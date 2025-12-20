@@ -1,25 +1,24 @@
 package com.hgu.guitar.vo;
 
 import java.util.Date;
+import java.util.List;
 
 public class SheetVO {
 
     private Integer sheetId;
     private String title;
-
     private String sheetFile;
     private String musicKey;
 
-    private Integer codeId;      // code_table과 연결될 수 있음
+    // ⭐⭐⭐ 다중 코드 연결
+    private List<Integer> codeIds;
 
     private String difficulty;
     private String commentText;
     private String stroke;
-
     private Date createdAt;
 
-    public SheetVO() {
-    }
+    // ===== getter / setter =====
 
     public Integer getSheetId() {
         return sheetId;
@@ -37,7 +36,6 @@ public class SheetVO {
         this.title = title;
     }
 
-
     public String getSheetFile() {
         return sheetFile;
     }
@@ -54,12 +52,12 @@ public class SheetVO {
         this.musicKey = musicKey;
     }
 
-    public Integer getCodeId() {
-        return codeId;
+    public List<Integer> getCodeIds() {
+        return codeIds;
     }
 
-    public void setCodeId(Integer codeId) {
-        this.codeId = codeId;
+    public void setCodeIds(List<Integer> codeIds) {
+        this.codeIds = codeIds;
     }
 
     public String getDifficulty() {
@@ -92,20 +90,5 @@ public class SheetVO {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
-    }
-
-    @Override
-    public String toString() {
-        return "SheetVO{" +
-                "sheetId=" + sheetId +
-                ", title='" + title + '\'' +
-                ", sheetFile='" + sheetFile + '\'' +
-                ", musicKey='" + musicKey + '\'' +
-                ", codeId=" + codeId +
-                ", difficulty='" + difficulty + '\'' +
-                ", commentText='" + commentText + '\'' +
-                ", stroke='" + stroke + '\'' +
-                ", createdAt=" + createdAt +
-                '}';
     }
 }
