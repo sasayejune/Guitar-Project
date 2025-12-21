@@ -34,14 +34,15 @@
     </c:if>
 
     <form method="post" action="${pageContext.request.contextPath}/login/signupOk">
+
         <div class="form-group">
-            <label for="userid">아이디</label>
-            <input type="text" id="userid" name="userid" required>
+            <label for="username">닉네임</label>
+            <input type="text" id="username" name="username" required>
         </div>
 
         <div class="form-group">
-            <label for="username">이름</label>
-            <input type="text" id="username" name="username" required>
+            <label for="userid">아이디</label>
+            <input type="text" id="userid" name="userid" required>
         </div>
 
         <div class="form-group">
