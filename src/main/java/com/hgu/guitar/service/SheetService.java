@@ -14,4 +14,6 @@ public interface SheetService {
     void updateSheet(SheetVO sheet);
 
     void deleteSheet(Integer sheetId);
+
+    int countSheets();
 }
