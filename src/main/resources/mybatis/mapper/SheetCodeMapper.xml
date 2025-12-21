@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hgu.guitar.dao.SheetCodeMapper">
+
+    <!-- 악보-코드 연결 저장 -->
+    <insert id="insertSheetCode">
+        INSERT INTO sheet_code_map (sheet_id, code_id)
+        VALUES (#{sheetId}, #{codeId})
+    </insert>
+
+    <!-- 악보에 연결된 코드 목록 -->
+    <select id="getCodeIdsBySheetId" resultType="int">
+        SELECT code_id
+        FROM sheet_code_map
+        WHERE sheet_id = #{sheetId}
+    </select>
+
+    <!-- 악보 수정 시 기존 코드 연결 삭제 -->
+    <delete id="deleteBySheetId">
+        DELETE FROM sheet_code_map
+        WHERE sheet_id = #{sheetId}
+    </delete>
+
+</mapper>

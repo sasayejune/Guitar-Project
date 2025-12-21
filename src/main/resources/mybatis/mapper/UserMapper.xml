@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hgu.guitar.dao.UserMapper">
+
+    <select id="login"
+            parameterType="com.hgu.guitar.vo.UserVO"
+            resultType="com.hgu.guitar.vo.UserVO">
+        SELECT userid, username, password, role, created_at
+        FROM member
+        WHERE userid = #{userid}
+          AND password = #{password}
+    </select>
+
+    <insert id="signup" parameterType="com.hgu.guitar.vo.UserVO">
+        INSERT INTO member (userid, username, password, role)
+        VALUES (#{userid}, #{username}, #{password}, 'USER')
+    </insert>
+
+    <select id="countByUserid" parameterType="String" resultType="int">
+        SELECT COUNT(*) FROM member WHERE userid = #{userid}
+    </select>
+
+
+</mapper>

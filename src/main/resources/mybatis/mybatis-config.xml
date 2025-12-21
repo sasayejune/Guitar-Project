@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+    <!-- ========================= -->
+    <!-- 1. 매핑 규칙 설정         -->
+    <!-- ========================= -->
+    <settings>
+        <!-- DB의 snake_case → Java camelCase 자동 변환 -->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+
+        <!-- null 값 처리 기본 설정 -->
+        <setting name="jdbcTypeForNull" value="NULL"/>
+    </settings>
+
+    <!-- ========================= -->
+    <!-- 2. Type Alias (VO 패키지) -->
+    <!-- ========================= -->
+    <typeAliases>
+        <package name="com.hgu.guitar.vo"/>
+    </typeAliases>
+
+    <!-- ========================= -->
+    <!-- 3. Mapper XML 불러오기    -->
+    <!-- ========================= -->
+    <mappers>
+        <package name="com.hgu.guitar.dao"/>
+    </mappers>
+
+</configuration>
