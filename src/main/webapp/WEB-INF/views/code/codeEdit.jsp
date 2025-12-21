@@ -13,19 +13,36 @@
             padding: 0;
             width: 100%;
             height: 100%;
-            overflow: hidden;
             background: none;
             font-family: Arial, sans-serif;
+        }
+
+        /* ✅ 수정: 페이지 스크롤 가능 */
+        body{
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        /* ✅ 수정: 레이아웃 */
+        .layout {
+            display: flex;
+            gap: 18px;
+            align-items: flex-start;
+            padding: 14px;
+            box-sizing: border-box;
         }
 
         #editView {
             position: relative;
             width: 100%;
+            flex: 1;
+            min-width: 0;
         }
 
         #guitarImage {
             width: 100%;
             display: block;
+            border-radius: 14px;
         }
 
         #fingerCanvas {
@@ -36,36 +53,109 @@
             pointer-events: auto;
         }
 
+
         .panel {
-            position: absolute;
-            right: 14px;
-            top: 20px;
-            z-index: 20;
+            width: 360px;
+            max-width: 42vw;
             background: rgba(255,255,255,0.92);
-            padding: 12px;
-            border-radius: 12px;
+            padding: 16px;
+            border-radius: 18px;
             font-size: 13px;
-            width: 220px;
+            box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+            backdrop-filter: blur(10px);
+        }
+
+        .panel .title {
+            font-weight: 900;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .panel .hint {
+            background: #f5f7ff;
+            border: 1px solid #cfe0ff;
+            border-radius: 14px;
+            padding: 10px 12px;
+        }
+
+        #guideText {
+            margin-top: 8px;
+            font-weight: 900;
         }
 
         .panel button {
             display: block;
             width: 100%;
-            margin-top: 6px;
-            padding: 8px 10px;
+            margin-top: 8px;
+            padding: 11px 12px;
             cursor: pointer;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            font-weight: 900 !important;
+            font-size: 14px !important;     /* ✅ 수정 */
+            color: #111827 !important;      /* ✅ 수정 */
+            background: #fff;
+            transition: .15s;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+        .panel button:hover{ transform: translateY(-1px); }
+
+        .btn-primary {
+            background: #2563eb !important;
+            border-color: #2563eb !important;
+            color: #fff !important;
+        }
+        .btn-warn {
+            background: #f3f4f6 !important;
+            color: #111827 !important;
         }
 
-        .panel a {
-            display: inline-block;
-            margin-top: 8px;
-            text-decoration: none;
+        .panel hr {
+            border: none;
+            border-top: 1px solid #e5e7eb;
+            margin: 12px 0;
         }
 
-        #guideText {
+        .panel audio { width: 100%; }
+
+        .panel input[type="file"]{
+            width: 100%;
             margin-top: 8px;
-            font-weight: bold;
         }
+
+        /* ✅ 수정: 버튼 영역(항상 보이게) */
+        .action-bar{
+            margin-top: 12px;
+            display: flex;
+            gap: 10px;
+        }
+        .action-bar button{
+            width: 100%;
+            margin-top: 0; /* ✅ 수정 */
+        }
+
+        /* ✅ 수정: 작은 화면에서는 아래로 */
+        @media (max-width: 980px) {
+            .layout{
+                flex-direction: column;
+                padding: 10px;
+            }
+            .panel{
+                width: 100%;
+                max-width: none;
+            }
+        }
+        .panel button.btn-primary {
+            color: #ffffff !important;
+        }
+
+
+        .panel button.btn-primary *{
+            color: #ffffff !important;
+        }
+
+
     </style>
 </head>
 
@@ -78,45 +168,46 @@
     <input type="hidden" name="codeId" value="${code.codeId}">
     <input type="hidden" name="codeName" value="${code.codeName}">
 
-    <!-- hidden 좌표 필드 -->
-    <input type="hidden" name="thumbX" id="thumbX">
-    <input type="hidden" name="thumbY" id="thumbY">
+    <!-- hidden 좌표 (기존 값 유지) -->
+    <input type="hidden" name="thumbX"  id="thumbX"  value="${code.thumbX}">
+    <input type="hidden" name="thumbY"  id="thumbY"  value="${code.thumbY}">
 
-    <input type="hidden" name="indexX" id="indexX">
-    <input type="hidden" name="indexY" id="indexY">
+    <input type="hidden" name="indexX"  id="indexX"  value="${code.indexX}">
+    <input type="hidden" name="indexY"  id="indexY"  value="${code.indexY}">
 
-    <input type="hidden" name="middleX" id="middleX">
-    <input type="hidden" name="middleY" id="middleY">
+    <input type="hidden" name="middleX" id="middleX" value="${code.middleX}">
+    <input type="hidden" name="middleY" id="middleY" value="${code.middleY}">
 
-    <input type="hidden" name="ringX" id="ringX">
-    <input type="hidden" name="ringY" id="ringY">
+    <input type="hidden" name="ringX"   id="ringX"   value="${code.ringX}">
+    <input type="hidden" name="ringY"   id="ringY"   value="${code.ringY}">
 
-    <input type="hidden" name="pinkyX" id="pinkyX">
-    <input type="hidden" name="pinkyY" id="pinkyY">
+    <input type="hidden" name="pinkyX"  id="pinkyX"  value="${code.pinkyX}">
+    <input type="hidden" name="pinkyY"  id="pinkyY"  value="${code.pinkyY}">
 
-    <div id="editView">
+    <div class="layout">
 
-        <!-- 기타 이미지 -->
-        <img id="guitarImage"
-             src="${pageContext.request.contextPath}/resources/img/guitar.png"
-             alt="guitar">
+        <div id="editView">
+            <img id="guitarImage"
+                 src="${pageContext.request.contextPath}/resources/img/guitar.png"
+                 alt="guitar">
+            <canvas id="fingerCanvas"></canvas>
+        </div>
 
-        <!-- 캔버스 -->
-        <canvas id="fingerCanvas"></canvas>
-
-        <!-- 우측 패널 -->
         <div class="panel">
-            <b>🎯 클릭 순서</b><br>
-            엄지 → 검지 → 중지 → 약지 → 소지
+            <div class="title">🛠 코드 수정: <span style="color:#2563eb;">${code.codeName}</span></div>
 
-            <div id="guideText">👉 엄지 손가락 위치를 클릭하세요</div>
+            <div class="hint">
+                <b>🎯 클릭 순서</b><br>
+                1(엄지) → 2(검지) → 3(중지) → 4(약지) → 5(소지)
+                <div id="guideText">👉 엄지 손가락 위치를 클릭하세요</div>
+            </div>
 
-            <button type="button" onclick="skipFinger()">현재 손가락 없음</button>
-            <button type="button" onclick="resetAll()">처음부터 다시찍기</button>
+            <button type="button" class="btn-warn" onclick="skipFinger()">현재 손가락 없음</button>
+            <button type="button" class="btn-warn" onclick="resetAll()">처음부터 다시찍기</button>
 
             <hr>
 
-            <audio controls style="width:200px;">
+            <audio controls>
                 <source src="${pageContext.request.contextPath}/${code.mp3Path}" type="audio/mpeg">
             </audio>
 
@@ -124,8 +215,14 @@
 
             <hr>
 
-            <button type="submit">수정 완료</button>
-            <a href="${pageContext.request.contextPath}/list">← 목록</a>
+            <!-- ✅ 수정: “수정 완료/목록” 버튼 -->
+            <div class="action-bar">
+                <button type="submit" class="btn-primary">수정 완료</button>
+                <button type="button" class="btn-primary"
+                        onclick="location.href='${pageContext.request.contextPath}/list'">
+                    ← 목록
+                </button>
+            </div>
         </div>
 
     </div>
@@ -139,24 +236,14 @@
 
     const fingers = ["thumb", "index", "middle", "ring", "pinky"];
     const fingerNames = ["엄지", "검지", "중지", "약지", "소지"];
+    const fingerNums  = [1, 2, 3, 4, 5];
+
     let step = 0;
 
     function resizeCanvas() {
         canvas.width = img.clientWidth;
         canvas.height = img.clientHeight;
         redrawAll();
-    }
-
-    function redrawAll() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        fingers.forEach(f => {
-            const x = parseFloat(document.getElementById(f + "X").value);
-            const y = parseFloat(document.getElementById(f + "Y").value);
-            if (!isNaN(x) && !isNaN(y) && x > 0 && y > 0) {
-                drawCircle(x, y);
-            }
-        });
     }
 
     function updateGuide() {
@@ -167,36 +254,72 @@
         }
     }
 
-    function drawCircle(xRatio, yRatio) {
+    function redrawAll() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        fingers.forEach((f, idx) => {
+            const x = parseFloat(document.getElementById(f + "X").value);
+            const y = parseFloat(document.getElementById(f + "Y").value);
+
+            if (!isNaN(x) && !isNaN(y) && x > 0 && y > 0) {
+                drawDotWithNumber(x, y, fingerNums[idx]);
+            }
+        });
+    }
+
+    function drawDotWithNumber(xRatio, yRatio, num) {
         const x = xRatio * canvas.width;
         const y = yRatio * canvas.height;
 
+        const r = Math.max(12, Math.min(20, canvas.width * 0.018));
+
         ctx.beginPath();
-        ctx.arc(x, y, 18, 0, Math.PI * 2);
+        ctx.arc(x, y, r + 2, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(255,255,255,0.95)";
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
         ctx.fillStyle = "red";
         ctx.fill();
+
+        ctx.fillStyle = "#fff";
+        ctx.font = "900 " + Math.max(12, Math.floor(r * 1.05)) + "px Arial";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(String(num), x, y + 0.5);
     }
 
-    // ✅ B 방식: 빈 값 대신 "0"을 넣어서 서버 바인딩 실패 방지
-    function clearHiddenAll() {
+    function clearHiddenAllToZero() {
         fingers.forEach(f => {
             document.getElementById(f + "X").value = "0";
             document.getElementById(f + "Y").value = "0";
         });
     }
 
-    // ✅ edit 들어오면: 기존 점/값 모두 제거하고 새로 시작
-    window.onload = () => {
+    function detectNextStepFromExisting() {
+        for (let i = 0; i < fingers.length; i++) {
+            const f = fingers[i];
+            const x = parseFloat(document.getElementById(f + "X").value);
+            const y = parseFloat(document.getElementById(f + "Y").value);
+            if (isNaN(x) || isNaN(y) || x <= 0 || y <= 0) {
+                step = i;
+                return;
+            }
+        }
+        step = fingers.length;
+    }
+
+    window.addEventListener("load", () => {
         resizeCanvas();
-        clearHiddenAll();      // ✅ 전부 0으로 초기화
-        redrawAll();           // ✅ 점도 전부 제거(0은 안 그려짐)
-        step = 0;
+        detectNextStepFromExisting();
+        redrawAll();
         updateGuide();
-    };
+    });
 
-    window.onresize = resizeCanvas;
+    window.addEventListener("resize", resizeCanvas);
+    img.addEventListener("load", resizeCanvas);
 
-    // ✅ 캔버스 클릭으로 좌표 입력
     canvas.addEventListener("click", (e) => {
         if (step >= fingers.length) return;
 
@@ -208,12 +331,11 @@
         document.getElementById(f + "X").value = xRatio;
         document.getElementById(f + "Y").value = yRatio;
 
-        redrawAll();
         step++;
+        redrawAll();
         updateGuide();
     });
 
-    // ✅ 현재 손가락 없음 (여기도 0으로!)
     function skipFinger() {
         if (step >= fingers.length) return;
 
@@ -221,16 +343,15 @@
         document.getElementById(f + "X").value = "0";
         document.getElementById(f + "Y").value = "0";
 
-        redrawAll();
         step++;
+        redrawAll();
         updateGuide();
     }
 
-    // ✅ 처음부터 다시찍기
     function resetAll() {
-        clearHiddenAll(); // 전부 0
-        redrawAll();
+        clearHiddenAllToZero();
         step = 0;
+        redrawAll();
         updateGuide();
     }
 </script>

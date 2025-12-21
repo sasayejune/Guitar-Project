@@ -22,13 +22,16 @@
     <context:component-scan base-package="com.hgu.guitar"/>
 
     <!-- ======================================== -->
-    <!-- 정적 리소스 (프로젝트 안 resources 폴더) -->
+    <!-- 2. 정적 리소스                            -->
+    <!-- ======================================== -->
+    <!-- 프로젝트 리소스 -->
     <mvc:resources mapping="/resources/**" location="/resources/"/>
 
-    <!-- 업로드 파일 (war 밖 외부 폴더) -->
-    <mvc:resources mapping="/upload/**" location="file:${user.home}/guitar_upload/"/>
+    <!-- 업로드 파일: webapp/upload 아래 -->
+    <mvc:resources mapping="/upload/**" location="/upload/"/>
 
-
+    <!-- ✅ 중요: Dispatcher가 / 로 먹는 정적요청을 톰캣 기본서블릿에 위임 -->
+    <mvc:default-servlet-handler/>
 
     <!-- ======================================== -->
     <!-- 3. Spring MVC 기본 설정                   -->
@@ -60,10 +63,8 @@
     <bean id="sqlSessionFactory"
           class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
-        <property name="configLocation"
-                  value="classpath:mybatis/mybatis-config.xml"/>
-        <property name="mapperLocations"
-                  value="classpath:mybatis/mapper/*.xml"/>
+        <property name="configLocation" value="classpath:mybatis/mybatis-config.xml"/>
+        <property name="mapperLocations" value="classpath:mybatis/mapper/*.xml"/>
     </bean>
 
     <!-- ======================================== -->
@@ -80,7 +81,7 @@
     <bean id="multipartResolver"
           class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
         <property name="defaultEncoding" value="UTF-8"/>
-        <property name="maxUploadSize" value="10485760"/> <!-- 10MB -->
+        <property name="maxUploadSize" value="10485760"/>
     </bean>
 
     <!-- ======================================== -->
@@ -90,9 +91,8 @@
           class="com.hgu.guitar.interceptor.AuthInterceptor"/>
 
     <!-- ======================================== -->
-    <!-- 10. 인터셉터 URL 정책                    -->
+    <!-- 10. 인터셉터 URL 정책                     -->
     <!-- ======================================== -->
-
     <mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
@@ -106,14 +106,10 @@
 
             <!-- 정적 리소스 -->
             <mvc:exclude-mapping path="/resources/**"/>
-            <!-- 업로드 파일 (mp3/pdf/img) -->
             <mvc:exclude-mapping path="/upload/**"/>
 
             <ref bean="authInterceptor"/>
-
-
         </mvc:interceptor>
     </mvc:interceptors>
-
 
 </beans>

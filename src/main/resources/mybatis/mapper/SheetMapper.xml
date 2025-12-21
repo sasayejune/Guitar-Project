@@ -74,7 +74,7 @@
             comment_text = #{commentText},
             stroke = #{stroke},
             writer_userid = #{writerUserid}
-        WHERE sheet_id = #{sheetId},
+        WHERE sheet_id = #{sheetId}
 
     </update>
 

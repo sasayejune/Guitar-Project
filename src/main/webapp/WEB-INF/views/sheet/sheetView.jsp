@@ -198,10 +198,10 @@
         <div class="sheet-container">
             <c:choose>
                 <c:when test="${fn:endsWith(sheet.sheetFile, '.pdf')}">
-                    <iframe src="${pageContext.request.contextPath}/${sheet.sheetFile}"></iframe>
+                    <iframe src="${pageContext.request.contextPath}${sheet.sheetFile}"></iframe>
                 </c:when>
                 <c:otherwise>
-                    <img src="${pageContext.request.contextPath}/${sheet.sheetFile}">
+                    <img src="${pageContext.request.contextPath}${sheet.sheetFile}">
                 </c:otherwise>
             </c:choose>
         </div>
@@ -215,8 +215,6 @@
                    onclick="return confirm('정말 삭제할까요?');">삭제</a>
             </c:if>
         </div>
-
-
 
     </div>
 </div>
