@@ -84,4 +84,11 @@
         WHERE sheet_id = #{value}
     </delete>
 
+    <!-- 전체 악보 개수 -->
+    <select id="countSheets" resultType="int">
+        SELECT COUNT(*)
+        FROM sheet_table
+    </select>
+
+
 </mapper>

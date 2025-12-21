@@ -102,4 +102,9 @@ public class SheetServiceImpl implements SheetService {
         // 악보 삭제
         sheetMapper.deleteSheet(sheetId);
     }
+
+    @Override
+    public int countSheets() {
+        return sheetMapper.countSheets();
+    }
 }

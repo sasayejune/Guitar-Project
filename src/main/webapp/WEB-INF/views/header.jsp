@@ -155,7 +155,7 @@
 
             <!-- ADMIN 전용 -->
             <c:if test="${not empty loginUser and loginUser.role eq 'ADMIN'}">
-                <a class="navlink admin-badge" href="${pageContext.request.contextPath}/admin">관리자</a>
+                <a class="navlink admin-badge" href="${pageContext.request.contextPath}/admin">관리자 페이지 바로가기</a>
             </c:if>
         </div>
 

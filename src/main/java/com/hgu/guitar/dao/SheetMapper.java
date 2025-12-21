@@ -19,4 +19,8 @@ public interface SheetMapper {
 
     // 악보 삭제
     void deleteSheet(Integer sheetId);
+
+    // 전체 악보 개수
+    int countSheets();
+
 }
